@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// TIPE DATA DOMINO a
+// TIPE DATA DOMINO 
 
 type Domino struct {
 	Sisi1 int
