@@ -1,5 +1,5 @@
 package main
-k
+
 import (
 	"fmt"
 	"math/rand"
