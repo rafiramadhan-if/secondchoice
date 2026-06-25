@@ -2,128 +2,88 @@ package main
 
 import "fmt"
 
-const nMax int = 7919
+type arrInt [1000000]int
 
-type Buku struct {
-	id       string
-	judul    string
-	penulis  string
-	penerbit string
-	eksemplar int
-	tahun    int
-	rating   int
+func selectionSortAsc(T *arrInt, n int) {
+    var i, j, idx_min, t int
+    i = 1
+    for i <= n-1 {
+        idx_min = i - 1
+        j = i
+        for j < n {
+            if T[idx_min] > T[j] {
+                idx_min = j
+            }
+            j = j + 1
+        }
+        t = T[idx_min]
+        T[idx_min] = T[i-1]
+        T[i-1] = t
+        i = i + 1
+    }
 }
 
-type DaftarBuku [7919]Buku
-
-var Pustaka DaftarBuku
-var nPustaka int
-
-func DaftarkanBuku(pustaka *DaftarBuku, n *int) {
-	fmt.Scan(n)
-	var i int
-	i = 0
-	for i < *n {
-		fmt.Scan(&pustaka[i].id)
-		fmt.Scan(&pustaka[i].judul)
-		fmt.Scan(&pustaka[i].penulis)
-		fmt.Scan(&pustaka[i].penerbit)
-		fmt.Scan(&pustaka[i].eksemplar)
-		fmt.Scan(&pustaka[i].tahun)
-		fmt.Scan(&pustaka[i].rating)
-		i = i + 1
-	}
-}
-
-func CetakTerfavorit(pustaka DaftarBuku, n int) {
-	var idxMax, i int
-	idxMax = 0
-	i = 1
-	for i < n {
-		if pustaka[i].rating > pustaka[idxMax].rating {
-			idxMax = i
-		}
-		i = i + 1
-	}
-	fmt.Println("Buku Terfavorit")
-	fmt.Println("Judul    :", pustaka[idxMax].judul)
-	fmt.Println("Penulis  :", pustaka[idxMax].penulis)
-	fmt.Println("Penerbit :", pustaka[idxMax].penerbit)
-	fmt.Println("Tahun    :", pustaka[idxMax].tahun)
-}
-
-func UrutBuku(pustaka *DaftarBuku, n int) {
-	var temp Buku
-	var i, j int
-	i = 1
-	for i <= n-1 {
-		j = i
-		temp = pustaka[j]
-		for j > 0 && temp.rating > pustaka[j-1].rating {
-			pustaka[j] = pustaka[j-1]
-			j = j - 1
-		}
-		pustaka[j] = temp
-		i = i + 1
-	}
-}
-
-func Cetak5Terbaru(pustaka DaftarBuku, n int) {
-	fmt.Println("5 Buku Rating Tertinggi")
-	batas := 5
-	if n < 5 {
-		batas = n
-	}
-	var i int
-	i = 0
-	for i < batas {
-		fmt.Printf("%d. %s (Rating: %d)\n", i+1, pustaka[i].judul, pustaka[i].rating)
-		i = i + 1
-	}
-}
-
-func CariBuku(pustaka DaftarBuku, n int, r int) {
-	var kiri, kanan, tengah int
-	var ketemu bool
-	kiri = 0
-	kanan = n - 1
-	ketemu = false
-
-	for kiri <= kanan && !ketemu {
-		tengah = (kiri + kanan) / 2
-		if pustaka[tengah].rating == r {
-			ketemu = true
-		} else if pustaka[tengah].rating < r {
-			kanan = tengah - 1
-		} else {
-			kiri = tengah + 1
-		}
-	}
-
-	fmt.Println("Hasil Pencarian Buku")
-	if ketemu {
-		fmt.Println("Judul     :", pustaka[tengah].judul)
-		fmt.Println("Penulis   :", pustaka[tengah].penulis)
-		fmt.Println("Penerbit  :", pustaka[tengah].penerbit)
-		fmt.Println("Tahun     :", pustaka[tengah].tahun)
-		fmt.Println("Eksemplar :", pustaka[tengah].eksemplar)
-		fmt.Println("Rating    :", pustaka[tengah].rating)
-	} else {
-		fmt.Println("Tidak ada buku dengan rating seperti itu")
-	}
+func selectionSortDesc(T *arrInt, n int) {
+    var i, j, idx_max, t int
+    i = 1
+    for i <= n-1 {
+        idx_max = i - 1
+        j = i
+        for j < n {
+            if T[idx_max] < T[j] {
+                idx_max = j
+            }
+            j = j + 1
+        }
+        t = T[idx_max]
+        T[idx_max] = T[i-1]
+        T[i-1] = t
+        i = i + 1
+    }
 }
 
 func main() {
-	var ratingCari int
+    var n, m, input int
+    var ganjil, genap arrInt
 
-	DaftarkanBuku(&Pustaka, &nPustaka)
+    fmt.Scan(&n)
 
-	CetakTerfavorit(Pustaka, nPustaka)
+    for i := 0; i < n; i++ {
+        var nGanjil, nGenap int
+        fmt.Scan(&m)
 
-	UrutBuku(&Pustaka, nPustaka)
+        for j := 0; j < m; j++ {
+            fmt.Scan(&input)
+            if input%2 != 0 {
+                ganjil[nGanjil] = input
+                nGanjil++
+            } else {
+                genap[nGenap] = input
+                nGenap++
+            }
+        }
 
-	Cetak5Terbaru(Pustaka, nPustaka)
+        selectionSortAsc(&ganjil, nGanjil)
+        selectionSortDesc(&genap, nGenap)
 
-	fmt.Scan(&ratingCari)
-	CariBuku(Pustaka, nPustaka, ratingCari)
+        firstPrint := true
+        for j := 0; j < nGanjil; j++ {
+            if firstPrint {
+                fmt.Printf("%d", ganjil[j])
+                firstPrint = false
+            } else {
+                fmt.Printf(" %d", ganjil[j])
+            }
+        }
+
+        for j := 0; j < nGenap; j++ {
+            if firstPrint {
+                fmt.Printf("%d", genap[j])
+                firstPrint = false
+            } else {
+                fmt.Printf(" %d", genap[j])
+            }
+        }
+        fmt.Println()
+    }
 }
