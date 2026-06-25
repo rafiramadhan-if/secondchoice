@@ -2,77 +2,48 @@ package main
 
 import "fmt"
 
-type arrInt [10000]int
+type arrInt [1000000]int
 
-func insertionSort(T *arrInt, n int) {
-	var temp, i, j int
-	i = 1
-	for i <= n-1 {
-		j = i
-		temp = T[j]
-		for j > 0 && temp < T[j-1] {
-			T[j] = T[j - 1]
-			j = j - 1
-		}
-		T[j] = temp
-		i = i + 1
-	}
-}
-
-func cekJarak(T *arrInt, n int) {
-	if n <= 1 {
-		fmt.Println("Data berjarak tidak tetap")
-		return
-	}
-
-	jarak := T[1] - T[0]
-	tetap := true
-
-	var i int
-	i = 1
-	for i <= n-1 {
-		if T[i]-T[i-1] != jarak {
-			tetap = false
-		}
-		i = i + 1
-	}
-
-	if tetap {
-		fmt.Printf("Data berjarak %d\n", jarak)
-	} else {
-		fmt.Println("Data berjarak tidak tetap")
-	}
+func selectionSort(T *arrInt, n int) {
+    var i, j, idx_min, t int
+    i = 1
+    for i <= n-1 {
+        idx_min = i - 1
+        j = i
+        for j < n {
+            if T[idx_min] > T[j] {
+                idx_min = j
+            }
+            j = j + 1
+        }
+        t = T[idx_min]
+        T[idx_min] = T[i-1]
+        T[i-1] = t
+        i = i + 1
+    }
 }
 
 func main() {
-	var T arrInt
-	var n int
-	var input int
+    var n, m int
+    var data arrInt
 
-	n = 0
+    fmt.Scan(&n)
 
-	for {
-		fmt.Scan(&input)
-		if input < 0 {
-			break
-		}
-		T[n] = input
-		n = n + 1
-	}
+    for i := 0; i < n; i++ {
+        fmt.Scan(&m)
 
-	insertionSort(&T, n)
+        for j := 0; j < m; j++ {
+            fmt.Scan(&data[j])
+        }
 
-	var i int
-	i = 0
-	for i < n {
-		if i < n-1 {
-			fmt.Printf("%d ", T[i])
-		} else {
-			fmt.Printf("%d", T[i])
-		}
-		i = i + 1
-	}
-	fmt.Println()
+        selectionSort(&data, m)
 
-	cekJarak(&T, n)
+        for j := 0; j < m; j++ {
+            if j < m-1 {
+                fmt.Printf("%d ", data[j])
+            } else {
+                fmt.Printf("%d\n", data[j])
+            }
+        }
+    }
 }
